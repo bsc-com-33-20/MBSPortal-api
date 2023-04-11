@@ -1,6 +1,7 @@
 const express = require('express')
 const app =express()
 
+const dbConnection = require('./src/utils/mysql.connector')
 const post = require('./src/posts/post.model')
 
 app.get('/api/v1', function(req, res){
@@ -13,4 +14,9 @@ app.get('/api/v1/posts', function(req, res){
 
 app.listen(3000, function(){
     console.log(' MBS listening on port 3000')
+
+    dbConnection.connect(function(err){
+        if (err) throw(err);
+        console.log('connected to MySQL')
+    })
 })
