@@ -1,8 +1,15 @@
 const express = require('express')
 const app =express()
 
+const bodyParser = require('body-parser')
+// Request Body parsing Middleware
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+
 const dbConnection = require('./src/utils/mysql.connector')
-const post = require('./src/posts/post.model')
+
+const { Post } = require('./src/posts/post.model')
+//const post = require('./src/posts/post.model')
 
 app.get('/api/v1', function(req, res){
     return res.json(req.headers)
@@ -15,12 +22,15 @@ app.get('/api/v1/posts', function(req, res){
         console.log(res);
         return res.json(result)
     });
-    return res.json([post])
+    //return res.json([post])
 })
 
 app.post('/api/v1/posts', function(req, res){
     
-    var sql = "INSERT INTO posts (name,imageurl,summery) VALUES ('Company Inc', 'https://example.com', 'whaterver there is' )";
+    const { name, imageurl, summery } = req.body // destructure sent properties from the REQUEST body
+    var sql = `INSERT INTO posts (name, imageurl, summery) VALUES ('${name}','${imageurl}','${summery}')`;
+
+    //var sql = "INSERT INTO posts (name,imageurl,summery) VALUES ('Bisiness Inc', 'https://business.com', 'abcdef ghijk' )";
         dbConnection.query(sql, function (err, result) {
             if (err) throw err;
             console.log("1 record inserted");

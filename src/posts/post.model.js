@@ -13,7 +13,4 @@ class Post {
     }
 }
 
-module.exports = {
-    post,
-    Post
-}
+module.exports = { Post }
