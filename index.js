@@ -23,13 +23,34 @@ app.patch('/api/v1/posts/:id', function(req, res) {
         if (err) throw err
 
         const post = req.body
-        console.log(post)
+        console.log(Object.entries(post))
 
         if (rows.length >= 1){
             
-            const updateSql = `UPDATE posts SET name='${post.name}',summary='${post.summary} WHERE id=${rows[0].id}`
+            let props = ''
+            //const updateSql = `UPDATE posts SET name='${post.name}',summary='${post.summary} WHERE id=${rows[0].id}`
+           
+
+            props = Object.keys(post).map((key, index) =>{
+                console.log(key)
+                console.log(Object.values(post).at(index))
+
+                return props += `${[key]} = '${Object.values(post).at(index)}'`
+            })
+
+            const updateSql = `UPDATE posts SET ${props[props.length - 1]} WHERE id=${rows[0].id}`
 
             console.log(updateSql)
+            console.log(props[props.length - 1])
+            /*Object.entries(post).map(entry =>{
+                entry.keys().map(key =>{
+                    console.log(key)
+                    console.log(entry.values[key])
+                })
+            })*/
+
+            //console.log(updateSql)
+            //console.log(post.summary)
 
             return dbConnection.query(updateSql, function(err, result){
                 return res.json(result)
